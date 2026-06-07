@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+
+<body class="bg-[#0b1120] text-white flex items-center justify-center h-screen">
+
+<div class="w-full max-w-sm p-6 bg-white/5 rounded-xl">
+
+  <h1 class="text-xl mb-4">Login</h1>
+
+  <input id="email" class="w-full p-3 mb-2 bg-black/40 rounded" placeholder="Email">
+  <input id="password" type="password" class="w-full p-3 mb-4 bg-black/40 rounded" placeholder="Password">
+
+  <button onclick="login()" class="w-full bg-blue-600 p-3 rounded">
+    Login
+  </button>
+
+  <button onclick="goSignup()" class="w-full mt-2 bg-white/10 p-3 rounded">
+    Create Account
+  </button>
+
+</div>
+
+<script src="supabase.js"></script>
+
+<script>
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) return alert(error.message);
+
+  window.location.href = "chat.html";
+}
+
+function goSignup() {
+  window.location.href = "signup.html";
+}
+</script>
+
+</body>
+</html>
