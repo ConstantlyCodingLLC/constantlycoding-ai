@@ -1,0 +1,27 @@
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* 🚫 stops page movement */
+    background: #0b1120;
+  }
+
+  /* main app wrapper */
+  .app {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed; /* 🔒 locks screen */
+    top: 0;
+    left: 0;
+  }
+
+  /* scroll only inside chat/messages */
+  .scroll-area {
+    overflow-y: auto;
+  }
+</style>
