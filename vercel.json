@@ -1,8 +1,7 @@
-
 {
   "version": 2,
   "builds": [
-    { "src": "chat.js", "use": "@vercel/node" },
-    { "src": "constantlycodingai.html, "use": "@vercel/static" }
+    { "src": "api/chat.js", "use": "@vercel/node" },
+    { "src": "public/index.html", "use": "@vercel/static" }
   ]
 }
