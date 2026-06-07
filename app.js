@@ -1,62 +1,88 @@
-let messageCount = 0;
-const FREE_LIMIT = 25;
+let user = null;
 
-function addMessage(text, type) {
-  const chatBox = document.getElementById("chatBox");
+async function init() {
+  const { data } = await supabaseClient.auth.getUser();
+  user = data.user;
 
-  chatBox.innerHTML += `
-    <div class="${type === 'user'
-      ? 'bg-blue-600/20 ml-auto'
-      : 'bg-white/10'} p-3 rounded-xl w-fit max-w-[85%]">
-      ${text}
-    </div>
-  `;
-
-  chatBox.scrollTop = chatBox.scrollHeight;
+  if (!user) {
+    window.location.href = "index.html";
+  }
 }
 
-async function sendMessage() {
+init();
+
+function addMessage(text, type) {
+  const box = document.getElementById("messages");
+
+  const div = document.createElement("div");
+  div.className = "msg " + (type === "user" ? "user" : "ai");
+  div.innerText = text;
+
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+// CHECK LIMIT
+async function canSend() {
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("plan")
+    .eq("id", user.id)
+    .single();
+
+  if (profile.plan === "pro") return true;
+
+  const { data: usage } = await supabaseClient
+    .from("daily_usage")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("usage_date", today)
+    .single();
+
+  if (usage && usage.message_count >= 25) {
+    alert("Daily limit reached (25 messages). Upgrade to Pro.");
+    return false;
+  }
+
+  return true;
+}
+
+// SEND MESSAGE
+async function send() {
   const input = document.getElementById("input");
   const text = input.value.trim();
   if (!text) return;
 
-  if (messageCount >= FREE_LIMIT) {
-    alert("Free limit reached. Upgrade to Pro.");
-    return;
-  }
-
-  messageCount++;
+  if (!(await canSend())) return;
 
   addMessage(text, "user");
   input.value = "";
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer YOUR_OPENAI_KEY`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      temperature: 0.3,
-      max_tokens: 500,
-      messages: [
-        {
-          role: "system",
-          content: "You are a fast, clean AI assistant. Be clear and structured."
-        },
-        { role: "user", content: text }
-      ]
-    })
-  });
+  const reply = "AI response placeholder (connect OpenAI next)";
 
-  const data = await res.json();
-  const reply = data?.choices?.[0]?.message?.content || "Error";
+  addMessage(reply, "ai");
 
-  addMessage(reply, "assistant");
-}
+  // update usage
+  const today = new Date().toISOString().split("T")[0];
 
-async function logout() {
-  await supabaseClient.auth.signOut();
-  window.location.href = "index.html";
+  const { data: usage } = await supabaseClient
+    .from("daily_usage")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("usage_date", today)
+    .single();
+
+  if (usage) {
+    await supabaseClient
+      .from("daily_usage")
+      .update({ message_count: usage.message_count + 1 })
+      .eq("id", usage.id);
+  } else {
+    await supabaseClient.from("daily_usage").insert({
+      user_id: user.id,
+      message_count: 1
+    });
+  }
 }
