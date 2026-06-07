@@ -1,8 +1,8 @@
+
 {
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/constantlycodingai.html"
-    }
+  "version": 2,
+  "builds": [
+    { "src": "chat.js", "use": "@vercel/node" },
+    { "src": "constantlycodingai.html, "use": "@vercel/static" }
   ]
 }
