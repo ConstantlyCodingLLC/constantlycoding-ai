@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - AI Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#0b1120] text-white flex items-center justify-center h-screen">
+
+<div class="w-full max-w-sm p-6 bg-white/5 rounded-xl">
+
+  <h1 class="text-xl font-bold mb-4">AI Pro Login</h1>
+
+  <input id="email" class="w-full p-3 mb-2 bg-black/40 rounded"
+    placeholder="Email" />
+
+  <input id="password" type="password"
+    class="w-full p-3 mb-4 bg-black/40 rounded"
+    placeholder="Password" />
+
+  <button onclick="login()"
+    class="w-full bg-blue-600 p-3 rounded mb-2">
+    Login
+  </button>
+
+  <button onclick="signup()"
+    class="w-full bg-white/10 p-3 rounded">
+    Sign Up
+  </button>
+
+</div>
+
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+
+</body>
+</html>
