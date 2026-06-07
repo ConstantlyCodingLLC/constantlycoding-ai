@@ -2,6 +2,8 @@ window.signup = async function () {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
+  alert("Signup button clicked"); // TEST 1
+
   const { error } = await supabaseClient.auth.signUp({
     email,
     password
@@ -17,6 +19,8 @@ window.login = async function () {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
+  alert("Login clicked"); // TEST 1
+
   const { error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
@@ -25,12 +29,4 @@ window.login = async function () {
   if (error) return alert(error.message);
 
   window.location.href = "chat.html";
-};
-
-window.goSignup = function () {
-  window.location.href = "signup.html";
-};
-
-window.goLogin = function () {
-  window.location.href = "index.html";
 };
