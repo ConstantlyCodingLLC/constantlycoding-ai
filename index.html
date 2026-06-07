@@ -1,6 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Login</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b1120;
+      color: white;
+      font-family: system-ui;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 360px;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      background: rgba(0,0,0,0.4);
+      color: white;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #loginBtn {
+      background: #2563eb;
+      color: white;
+    }
+
+    #signupBtn {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2 style="margin-bottom:10px;">Login</h2>
+
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="loginBtn">Login</button>
+  <button id="signupBtn">Create Account</button>
+
+</div>
+
+<!-- SUPABASE -->
+<script src="supabase.js"></script>
+
+<!-- AUTH LOGIC -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  console.log("LOGIN PAGE LOADED");
+
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+
+  loginBtn.addEventListener("click", async () => {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      alert("Enter email + password");
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    window.location.href = "chat.html";
+  });
+
+  signupBtn.addEventListener("click", () => {
+    window.location.href = "signup.html";
+  });
+
+});
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
   <title>Welcome Back!</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
