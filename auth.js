@@ -1,38 +1,36 @@
-async function signup() {
+window.signup = async function () {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  const { data, error } = await supabaseClient.auth.signUp({
+  const { error } = await supabaseClient.auth.signUp({
     email,
     password
   });
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+  if (error) return alert(error.message);
 
-  alert("Account created! Check your email to confirm.");
-}
+  alert("Account created!");
+  window.location.href = "index.html";
+};
 
-async function login() {
+window.login = async function () {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
+  const { error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
   });
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+  if (error) return alert(error.message);
 
   window.location.href = "chat.html";
-}
+};
+
+window.goSignup = function () {
+  window.location.href = "signup.html";
+};
+
+window.goLogin = function () {
+  window.location.href = "index.html";
+};
