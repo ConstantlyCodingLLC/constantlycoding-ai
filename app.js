@@ -1,24 +1,42 @@
-async function sendMessage() {
-  const input = document.getElementById("input");
+let messageCount = 0;
+const FREE_LIMIT = 25;
+
+function addMessage(text, type) {
   const chatBox = document.getElementById("chatBox");
 
-  const text = input.value.trim();
-  if (!text) return;
-
   chatBox.innerHTML += `
-    <div class="bg-blue-600/20 p-3 rounded-xl ml-auto w-fit">
+    <div class="${type === 'user'
+      ? 'bg-blue-600/20 ml-auto'
+      : 'bg-white/10'} p-3 rounded-xl w-fit bubble">
       ${text}
     </div>
   `;
 
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById("input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  if (messageCount >= FREE_LIMIT) {
+    alert("Upgrade to Pro ($10.99/month) for unlimited access.");
+    return;
+  }
+
+  messageCount++;
+
+  addMessage(text, "user");
   input.value = "";
 
-  // placeholder instantly (FEELS FAST)
-  const aiBubbleId = "ai-" + Date.now();
+  // LIVE “thinking” bubble
+  const id = "ai-" + Date.now();
 
+  const chatBox = document.getElementById("chatBox");
   chatBox.innerHTML += `
-    <div id="${aiBubbleId}" class="bg-slate-800 p-3 rounded-xl w-fit">
-      Thinking...
+    <div id="${id}" class="bg-white/10 p-3 rounded-xl w-fit bubble">
+      typing...
     </div>
   `;
 
@@ -32,19 +50,19 @@ async function sendMessage() {
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      temperature: 0.4,
+      temperature: 0.3,
       max_tokens: 500,
       messages: [
         {
           role: "system",
           content: `
-You are a fast, clear AI assistant.
+You are AI Pro Assistant.
 
 Rules:
-- Keep responses short unless asked
-- Use bullet points when helpful
-- Be direct and structured
-- No fluff or long intros
+- Be clear and structured
+- Use bullets when helpful
+- Keep responses fast and direct
+- No long intros
           `
         },
         { role: "user", content: text }
@@ -53,9 +71,19 @@ Rules:
   });
 
   const data = await res.json();
-  const reply = data?.choices?.[0]?.message?.content || "Error generating response";
+  const reply = data?.choices?.[0]?.message?.content || "Error";
 
-  document.getElementById(aiBubbleId).innerHTML = reply;
+  document.getElementById(id).innerHTML = reply;
+}
 
-  chatBox.scrollTop = chatBox.scrollHeight;
+function openSettings() {
+  document.getElementById("settings").classList.remove("hidden");
+}
+
+function closeSettings() {
+  document.getElementById("settings").classList.add("hidden");
+}
+
+function setTheme(color) {
+  document.body.style.setProperty("--bg", color);
 }
