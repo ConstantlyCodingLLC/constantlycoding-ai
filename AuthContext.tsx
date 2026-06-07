@@ -1,12 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 export type Role =
-  | "owner"
-  | "platform_admin"
-  | "manager"
-  | "employee"
-  | "viewer";
+  | 'business_owner'
+  | 'manager'
+  | 'employee'
+  | 'admin'
+  | 'platform_admin'
+  | 'viewer';
 
 export interface Profile {
   id: string;
@@ -16,66 +17,50 @@ export interface Profile {
   company_id: string | null;
 }
 
-type AuthContextType = {
+interface AuthContextType {
   user: any;
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<any>;
-  signUp: (data: any) => Promise<any>;
+  signUp: (payload: any) => Promise<any>;
   signOut: () => Promise<void>;
-  getRoleRedirect: (role?: Role) => string;
-  refreshProfile: (userId: string) => Promise<void>;
-};
+  refreshProfile: () => Promise<void>;
+  getRoleRedirect: () => string;
+}
 
 const AuthContext = createContext<AuthContextType>(null as any);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: any) {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function fetchProfile(userId: string) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
       .single();
 
-    setProfile(data ?? null);
-  }
-
-  async function refreshProfile(userId: string) {
-    await fetchProfile(userId);
+    if (!error) setProfile(data);
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data }) => {
-      const sessionUser = data.session?.user || null;
-      setUser(sessionUser);
-
-      if (sessionUser) {
-        await fetchProfile(sessionUser.id);
-      }
-
+    supabase.auth.getUser().then(async ({ data }) => {
+      const u = data.user;
+      setUser(u);
+      if (u) await fetchProfile(u.id);
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        const sessionUser = session?.user || null;
-        setUser(sessionUser);
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) await fetchProfile(u.id);
+      else setProfile(null);
+    });
 
-        if (sessionUser) {
-          await fetchProfile(sessionUser.id);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -87,7 +72,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) return { error: error.message };
 
     await fetchProfile(data.user.id);
-
     return { user: data.user };
   };
 
@@ -98,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       options: {
         data: {
           full_name: payload.fullName,
-          role: payload.roleSelected, // MUST MATCH SUPABASE ENUM
+          role: payload.roleSelected,
         },
       },
     });
@@ -114,21 +98,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(null);
   };
 
-  const getRoleRedirect = (role?: Role) => {
-    const r = role || profile?.role;
+  // 🔥 FIX: ALWAYS USE PROFILE ROLE (NOT AUTH METADATA)
+  const getRoleRedirect = () => {
+    const role = profile?.role;
 
-    switch (r) {
-      case "owner":
-      case "platform_admin":
-        return "/dashboard";
-      case "manager":
-        return "/dashboard";
-      case "employee":
-        return "/dashboard";
-      case "viewer":
-        return "/dashboard";
+    switch (role) {
+      case 'business_owner':
+      case 'manager':
+      case 'admin':
+      case 'platform_admin':
+        return '/dashboard';
+
+      case 'employee':
+      case 'viewer':
       default:
-        return "/dashboard";
+        return '/dashboard';
     }
   };
 
@@ -141,8 +125,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signOut,
+        refreshProfile: () => fetchProfile(user?.id),
         getRoleRedirect,
-        refreshProfile,
       }}
     >
       {children}
