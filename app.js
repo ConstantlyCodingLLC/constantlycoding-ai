@@ -7,7 +7,7 @@ function addMessage(text, type) {
   chatBox.innerHTML += `
     <div class="${type === 'user'
       ? 'bg-blue-600/20 ml-auto'
-      : 'bg-white/10'} p-3 rounded-xl w-fit bubble">
+      : 'bg-white/10'} p-3 rounded-xl w-fit max-w-[85%]">
       ${text}
     </div>
   `;
@@ -21,7 +21,7 @@ async function sendMessage() {
   if (!text) return;
 
   if (messageCount >= FREE_LIMIT) {
-    alert("Upgrade to Pro ($10.99/month) for unlimited access.");
+    alert("Free limit reached. Upgrade to Pro.");
     return;
   }
 
@@ -30,22 +30,10 @@ async function sendMessage() {
   addMessage(text, "user");
   input.value = "";
 
-  // LIVE “thinking” bubble
-  const id = "ai-" + Date.now();
-
-  const chatBox = document.getElementById("chatBox");
-  chatBox.innerHTML += `
-    <div id="${id}" class="bg-white/10 p-3 rounded-xl w-fit bubble">
-      typing...
-    </div>
-  `;
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${CONFIG.OPENAI_KEY}`,
+      "Authorization": `Bearer YOUR_OPENAI_KEY`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -55,15 +43,7 @@ async function sendMessage() {
       messages: [
         {
           role: "system",
-          content: `
-You are AI Pro Assistant.
-
-Rules:
-- Be clear and structured
-- Use bullets when helpful
-- Keep responses fast and direct
-- No long intros
-          `
+          content: "You are a fast, clean AI assistant. Be clear and structured."
         },
         { role: "user", content: text }
       ]
@@ -73,17 +53,10 @@ Rules:
   const data = await res.json();
   const reply = data?.choices?.[0]?.message?.content || "Error";
 
-  document.getElementById(id).innerHTML = reply;
+  addMessage(reply, "assistant");
 }
 
-function openSettings() {
-  document.getElementById("settings").classList.remove("hidden");
-}
-
-function closeSettings() {
-  document.getElementById("settings").classList.add("hidden");
-}
-
-function setTheme(color) {
-  document.body.style.setProperty("--bg", color);
+async function logout() {
+  await supabaseClient.auth.signOut();
+  window.location.href = "index.html";
 }
