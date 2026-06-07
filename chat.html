@@ -13,15 +13,15 @@
       overflow: hidden;
     }
 
-    .chat {
-      max-width: 800px;
+    .wrap {
+      max-width: 850px;
       margin: auto;
       height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    .messages {
+    .msgs {
       flex: 1;
       overflow-y: auto;
       padding: 16px;
@@ -34,22 +34,22 @@
       max-width: 80%;
     }
 
-    .user { background: rgba(59,130,246,0.2); margin-left: auto; }
+    .user { background: rgba(59,130,246,0.25); margin-left: auto; }
     .ai { background: rgba(255,255,255,0.08); }
   </style>
 </head>
 
 <body>
 
-<div class="chat">
+<div class="wrap">
 
   <div class="p-3 border-b border-white/10">
     AI Assistant
   </div>
 
-  <div id="messages" class="messages"></div>
+  <div id="msgs" class="msgs"></div>
 
-  <div class="p-3 border-t border-white/10 flex gap-2">
+  <div class="p-3 flex gap-2 border-t border-white/10">
     <input id="input" class="flex-1 p-3 rounded bg-black/40" placeholder="Message...">
     <button onclick="send()" class="bg-blue-600 px-4 rounded">Send</button>
   </div>
