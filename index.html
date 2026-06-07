@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>AI Pro Login</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,17 +15,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0b1120;
-      color: white;
+      background: radial-gradient(circle at top, #1e293b, #0b1120);
       font-family: system-ui;
+      color: white;
     }
 
     .card {
       width: 100%;
-      max-width: 360px;
-      padding: 20px;
-      border-radius: 14px;
+      max-width: 380px;
+      padding: 24px;
+      border-radius: 16px;
       background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     input {
@@ -36,6 +38,7 @@
       border: none;
       background: rgba(0,0,0,0.4);
       color: white;
+      outline: none;
     }
 
     button {
@@ -45,23 +48,53 @@
       border-radius: 10px;
       border: none;
       cursor: pointer;
+      transition: 0.2s;
     }
 
-    #loginBtn { background: #2563eb; color: white; }
-    #signupBtn { background: rgba(255,255,255,0.1); color: white; }
+    #loginBtn {
+      background: #2563eb;
+      color: white;
+    }
+
+    #signupBtn {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    #forgotBtn {
+      background: transparent;
+      color: #93c5fd;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    button:hover {
+      transform: scale(1.02);
+    }
+
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 
 <body>
 
 <div class="card">
-  <h2>Login</h2>
+
+  <div class="title">AI Pro Assistant</div>
 
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
 
   <button id="loginBtn">Login</button>
   <button id="signupBtn">Create Account</button>
+
+  <button id="forgotBtn">Forgot Password?</button>
+
 </div>
 
 <script src="supabase.js"></script>
@@ -69,18 +102,18 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  console.log("LOGIN PAGE LOADED");
-
   const loginBtn = document.getElementById("loginBtn");
   const signupBtn = document.getElementById("signupBtn");
+  const forgotBtn = document.getElementById("forgotBtn");
 
+  // LOGIN → CHAT
   loginBtn.addEventListener("click", async () => {
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     if (!email || !password) {
-      alert("Missing email or password");
+      alert("Enter email and password");
       return;
     }
 
@@ -94,11 +127,35 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // ✅ GO TO CHAT
     window.location.href = "chat.html";
   });
 
+  // SIGNUP → SIGNUP PAGE
   signupBtn.addEventListener("click", () => {
     window.location.href = "signup.html";
+  });
+
+  // FORGOT PASSWORD (SUPABASE)
+  forgotBtn.addEventListener("click", async () => {
+
+    const email = document.getElementById("email").value;
+
+    if (!email) {
+      alert("Enter your email first");
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/reset.html"
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("Password reset email sent!");
   });
 
 });
