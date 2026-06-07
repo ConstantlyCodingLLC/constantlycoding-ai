@@ -11,21 +11,21 @@
   <style>
     body {
       margin: 0;
-      background: #0b1120;
-      color: white;
-      font-family: system-ui;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #0b1120;
+      color: white;
+      font-family: system-ui;
     }
 
     .card {
       width: 100%;
       max-width: 360px;
       padding: 20px;
-      background: rgba(255,255,255,0.05);
       border-radius: 14px;
+      background: rgba(255,255,255,0.05);
     }
 
     input {
@@ -36,7 +36,6 @@
       border: none;
       background: rgba(0,0,0,0.4);
       color: white;
-      outline: none;
     }
 
     button {
@@ -48,40 +47,25 @@
       cursor: pointer;
     }
 
-    #loginBtn {
-      background: #2563eb;
-      color: white;
-    }
-
-    #signupBtn {
-      background: rgba(255,255,255,0.08);
-      color: white;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
+    #loginBtn { background: #2563eb; color: white; }
+    #signupBtn { background: rgba(255,255,255,0.1); color: white; }
   </style>
 </head>
 
 <body>
 
 <div class="card">
-
-  <h2 style="margin-bottom:10px;">Login</h2>
+  <h2>Login</h2>
 
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
 
   <button id="loginBtn">Login</button>
   <button id="signupBtn">Create Account</button>
-
 </div>
 
-<!-- SUPABASE -->
 <script src="supabase.js"></script>
 
-<!-- AUTH LOGIC -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -96,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value;
 
     if (!email || !password) {
-      alert("Enter email + password");
+      alert("Missing email or password");
       return;
     }
 
@@ -119,63 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-  <title>Welcome Back!</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    body {
-      background: radial-gradient(circle at top, #1e293b, #0b1120);
-      overflow: hidden;
-    }
-
-    .logo-bg {
-      position: absolute;
-      inset: 0;
-      background: url("https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png") center/300px no-repeat;
-      opacity: 0.05;
-      filter: blur(1px);
-    }
-  </style>
-</head>
-
-<body class="text-white flex items-center justify-center h-screen">
-
-<div class="logo-bg"></div>
-
-<div class="relative w-full max-w-md p-6 bg-white/5 rounded-2xl backdrop-blur-lg">
-
-  <h1 class="text-2xl font-bold text-center mb-6">
-    AI Pro Assistant
-  </h1>
-
-  <input id="email"
-    class="w-full p-3 mb-3 rounded bg-black/40"
-    placeholder="Email" />
-
-  <input id="password" type="password"
-    class="w-full p-3 mb-5 rounded bg-black/40"
-    placeholder="Password" />
-
-  <button onclick="login()"
-    class="w-full bg-blue-600 p-3 rounded mb-2 hover:bg-blue-700">
-    Login
-  </button>
-
-  <button onclick="signup()"
-    class="w-full bg-white/10 p-3 rounded hover:bg-white/20">
-    Create Account
-  </button>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="supabase.js"></script>
-<script src="auth.js"></script>
 
 </body>
 </html>
