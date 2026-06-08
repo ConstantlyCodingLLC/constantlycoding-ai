@@ -1,4 +1,0 @@
-const CONFIG = {
-  FREE_LIMIT: 25,
-  OPENAI_KEY: "PUT_YOUR_KEY_HERE"
-};
