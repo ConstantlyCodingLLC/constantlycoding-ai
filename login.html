@@ -2,6 +2,49 @@
 <html>
 <head>
   <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+
+<div class="bg-gray-800 p-8 rounded w-96">
+  <h1 class="text-xl mb-4 font-bold">SaaS Login</h1>
+
+  <input id="email" class="w-full p-2 mb-2 bg-gray-700 rounded" placeholder="Email">
+  <input id="password" type="password" class="w-full p-2 mb-4 bg-gray-700 rounded" placeholder="Password">
+
+  <button onclick="login()" class="w-full bg-blue-500 p-2 rounded">
+    Login
+  </button>
+
+  <p class="text-sm mt-3">
+    <a href="signup.html" class="text-blue-400">Create account</a>
+  </p>
+</div>
+
+<script type="module">
+import { supabase } from "./supabase.js";
+
+window.login = async function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) return alert(error.message);
+
+  window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
