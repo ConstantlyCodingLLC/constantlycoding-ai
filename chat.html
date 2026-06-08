@@ -1,6 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Chat App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-950 text-white flex flex-col h-screen">
+
+<!-- HEADER -->
+<div class="p-4 bg-gray-900 flex justify-between items-center">
+  <h1 class="font-bold text-lg">AI Chat</h1>
+  <button onclick="logout()" class="text-red-400">Logout</button>
+</div>
+
+<!-- CHAT BOX -->
+<div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-2"></div>
+
+<!-- FILE PREVIEW -->
+<div id="preview" class="px-4"></div>
+
+<!-- INPUT AREA -->
+<div class="p-4 bg-gray-900 flex gap-2 items-center">
+
+  <input id="message" class="flex-1 p-2 rounded bg-gray-800" placeholder="Type message...">
+
+  <input type="file" id="fileInput" class="hidden" onchange="previewFile()">
+  <button onclick="document.getElementById('fileInput').click()" class="bg-gray-700 px-3 py-2 rounded">
+    📎
+  </button>
+
+  <button onclick="sendMessage()" class="bg-blue-500 px-4 py-2 rounded">
+    Send
+  </button>
+
+</div>
+
+<script>
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "index.html";
+}
+
+function sendMessage() {
+  const msg = document.getElementById("message").value;
+
+  if (!msg) return;
+
+  const div = document.createElement("div");
+  div.className = "bg-blue-600 p-2 rounded w-fit max-w-xs";
+  div.innerText = msg;
+
+  document.getElementById("chatBox").appendChild(div);
+  document.getElementById("message").value = "";
+}
+
+function previewFile() {
+  const file = document.getElementById("fileInput").files[0];
+  const preview = document.getElementById("preview");
+
+  preview.innerHTML = "";
+
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+
+  let el;
+
+  if (file.type.startsWith("image")) {
+    el = document.createElement("img");
+    el.src = url;
+    el.className = "w-40 mt-2 rounded";
+  }
+  else if (file.type.startsWith("video")) {
+    el = document.createElement("video");
+    el.src = url;
+    el.controls = true;
+    el.className = "w-60 mt-2 rounded";
+  }
+  else {
+    el = document.createElement("a");
+    el.href = url;
+    el.innerText = file.name;
+    el.className = "text-blue-400";
+  }
+
+  preview.appendChild(el);
+}
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
   <title>AI Chat SaaS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
