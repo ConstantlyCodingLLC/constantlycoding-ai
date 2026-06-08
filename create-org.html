@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Org</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+
+<div class="bg-gray-800 p-8 rounded w-96">
+  <h1 class="text-xl mb-4">Create Organization</h1>
+
+  <input id="orgName" class="w-full p-2 mb-4 bg-gray-700 rounded" placeholder="Company Name">
+
+  <button onclick="createOrg()" class="w-full bg-blue-500 p-2 rounded">
+    Create
+  </button>
+</div>
+
+<script type="module">
+import { supabase } from "./supabase.js";
+
+window.createOrg = async function () {
+  const name = document.getElementById("orgName").value;
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  const user = userData.user;
+
+  const { data: org } = await supabase
+    .from("organizations")
+    .insert({ name, owner_id: user.id })
+    .select()
+    .single();
+
+  await supabase
+    .from("profiles")
+    .update({ org_id: org.id, role: "owner" })
+    .eq("id", user.id);
+
+  window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
