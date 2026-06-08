@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white">
+
+<div class="p-4 flex justify-between bg-gray-800">
+  <h1 class="font-bold">SaaS Dashboard</h1>
+  <button onclick="logout()" class="text-red-400">Logout</button>
+</div>
+
+<div class="p-6">
+  <button onclick="goChat()" class="bg-blue-500 p-3 rounded">
+    Open Chat
+  </button>
+</div>
+
+<script type="module">
+import { supabase } from "./supabase.js";
+
+window.logout = async function () {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+
+window.goChat = function () {
+  window.location.href = "chat.html";
+}
+</script>
+
+</body>
+</html>
