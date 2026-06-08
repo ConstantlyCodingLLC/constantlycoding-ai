@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Pro Assistant Login</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(circle at top,#1e293b,#0b1120);
+  color:white;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo-bg{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12rem;
+  font-weight:900;
+  color:rgba(255,255,255,.03);
+  pointer-events:none;
+}
+
+.card{
+  width:100%;
+  max-width:420px;
+  padding:30px;
+  border-radius:24px;
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.title{
+  text-align:center;
+  font-size:2rem;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border:none;
+  border-radius:12px;
+  background:rgba(0,0,0,.35);
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+#loginBtn{
+  background:#2563eb;
+  color:white;
+}
+
+#createBtn{
+  background:rgba(255,255,255,.08);
+  color:white;
+}
+
+#forgotBtn{
+  background:none;
+  color:#93c5fd;
+}
+
+button:hover{
+  opacity:.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="logo-bg">AI</div>
+
+<div class="card">
+
+  <div class="title">AI Pro Assistant</div>
+
+  <input
+    id="email"
+    type="email"
+    placeholder="Email">
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Password">
+
+  <button id="loginBtn">Login</button>
+
+  <button id="createBtn">Create Account</button>
+
+  <button id="forgotBtn">Forgot Password?</button>
+
+</div>
+
+<script src="supabase.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const loginBtn=document.getElementById("loginBtn");
+const createBtn=document.getElementById("createBtn");
+const forgotBtn=document.getElementById("forgotBtn");
+
+loginBtn.addEventListener("click",async()=>{
+
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+
+if(!email||!password){
+alert("Enter email and password");
+return;
+}
+
+const { error } =
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+alert(error.message);
+return;
+}
+
+window.location.href="chat.html";
+
+});
+
+createBtn.addEventListener("click",()=>{
+
+window.location.href="signup.html";
+
+});
+
+forgotBtn.addEventListener("click",async()=>{
+
+const email=document.getElementById("email").value;
+
+if(!email){
+alert("Enter your email first");
+return;
+}
+
+const { error } =
+await supabaseClient.auth.resetPasswordForEmail(email,{
+redirectTo:window.location.origin + "/reset.html"
+});
+
+if(error){
+alert(error.message);
+return;
+}
+
+alert("Password reset email sent");
+
+});
+
+});
+</script>
+
+</body>
+</html>
