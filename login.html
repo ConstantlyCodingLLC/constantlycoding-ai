@@ -2,6 +2,49 @@
 <html>
 <head>
   <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+
+<div class="bg-gray-800 p-8 rounded-xl w-96 text-white shadow-xl">
+  <h1 class="text-2xl mb-6 text-center font-bold">AI Pro Login</h1>
+
+  <input id="email" class="w-full p-2 mb-3 rounded bg-gray-700" placeholder="Email">
+  <input id="password" type="password" class="w-full p-2 mb-4 rounded bg-gray-700" placeholder="Password">
+
+  <button onclick="login()" class="w-full bg-blue-500 p-2 rounded hover:bg-blue-600">
+    Login
+  </button>
+
+  <div class="flex justify-between mt-4 text-sm">
+    <a href="signup.html" class="text-blue-400">Sign Up</a>
+    <a href="forgotpassword.html" class="text-gray-400">Forgot?</a>
+  </div>
+</div>
+
+<script>
+function login() {
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("password").value;
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (user && user.email === email && user.password === pass) {
+    localStorage.setItem("loggedIn", "true");
+    window.location.href = "chat.html";
+  } else {
+    alert("Invalid login");
+  }
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex items-center justify-center h-screen bg-gray-100">
