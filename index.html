@@ -2,6 +2,43 @@
 <html>
 <head>
   <title>AI Pro Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+  <div class="bg-white p-8 rounded-xl shadow-md w-96">
+    <h1 class="text-2xl font-bold mb-6 text-center">AI Pro Login</h1>
+
+    <input id="email" type="email" placeholder="Email"
+      class="w-full p-2 mb-3 border rounded">
+
+    <input id="password" type="password" placeholder="Password"
+      class="w-full p-2 mb-4 border rounded">
+
+    <button onclick="login()"
+      class="w-full bg-blue-600 text-white p-2 rounded mb-3">
+      Login
+    </button>
+
+    <button onclick="guest()"
+      class="w-full bg-gray-500 text-white p-2 rounded mb-3">
+      Continue as Guest
+    </button>
+
+    <div class="text-sm text-center space-y-2">
+      <a href="signup.html" class="text-blue-500 block">Create Account</a>
+      <a href="forgotpassword.html" class="text-blue-500 block">Forgot Password?</a>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <title>AI Pro Login</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
